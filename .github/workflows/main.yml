@@ -244,3 +244,5 @@ jobs:
         run: |
           ENDPOINT=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP --query properties.configuration.ingress.fqdn -o tsv)
           echo "Endpoint del Container App: https://$ENDPOINT"
+
+
