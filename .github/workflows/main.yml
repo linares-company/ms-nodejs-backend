@@ -83,6 +83,36 @@ jobs:
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
           echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
 
+      - name: Crear Container App si no existe
+        run: |
+          # Verificar si el Container App existe
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP &> /dev/null; then
+            echo "Container App $APP_NAME no existe, creándolo..."
+            
+            # Obtener el Container App Environment (asume que ya existe)
+            ENVIRONMENT_NAME="cae-${{ vars.APELLIDO }}"
+            
+            # Crear el Container App
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ENVIRONMENT_NAME \
+              --image $IMAGE \
+              --target-port 3000 \
+              --ingress external \
+              --registry-server $ACR_NAME.azurecr.io \
+              --registry-identity system \
+              --cpu 0.25 \
+              --memory 0.5Gi \
+              --min-replicas 1 \
+              --max-replicas 3 \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+            
+            echo "Container App $APP_NAME creado exitosamente"
+          else
+            echo "Container App $APP_NAME ya existe, se actualizará"
+          fi
+
       - name: Configurar ACR credentials para Container App
         run: |
           echo "Configurando credenciales del ACR para la Container App..."
@@ -151,6 +181,36 @@ jobs:
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
           echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
 
+      - name: Crear Container App si no existe
+        run: |
+          # Verificar si el Container App existe
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP &> /dev/null; then
+            echo "Container App $APP_NAME no existe, creándolo..."
+            
+            # Obtener el Container App Environment (asume que ya existe)
+            ENVIRONMENT_NAME="cae-${{ vars.APELLIDO }}"
+            
+            # Crear el Container App
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ENVIRONMENT_NAME \
+              --image $IMAGE \
+              --target-port 3000 \
+              --ingress external \
+              --registry-server $ACR_NAME.azurecr.io \
+              --registry-identity system \
+              --cpu 0.25 \
+              --memory 0.5Gi \
+              --min-replicas 1 \
+              --max-replicas 3 \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+            
+            echo "Container App $APP_NAME creado exitosamente"
+          else
+            echo "Container App $APP_NAME ya existe, se actualizará"
+          fi
+
       - name: Configurar ACR credentials para Container App
         run: |
           echo "Configurando credenciales del ACR para la Container App..."
@@ -216,7 +276,37 @@ jobs:
           echo "IMAGE=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
-          echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
+          echo="ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
+
+      - name: Crear Container App si no existe
+        run: |
+          # Verificar si el Container App existe
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP &> /dev/null; then
+            echo "Container App $APP_NAME no existe, creándolo..."
+            
+            # Obtener el Container App Environment (asume que ya existe)
+            ENVIRONMENT_NAME="cae-${{ vars.APELLIDO }}"
+            
+            # Crear el Container App
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ENVIRONMENT_NAME \
+              --image $IMAGE \
+              --target-port 3000 \
+              --ingress external \
+              --registry-server $ACR_NAME.azurecr.io \
+              --registry-identity system \
+              --cpu 0.25 \
+              --memory 0.5Gi \
+              --min-replicas 1 \
+              --max-replicas 3 \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+            
+            echo "Container App $APP_NAME creado exitosamente"
+          else
+            echo "Container App $APP_NAME ya existe, se actualizará"
+          fi
 
       - name: Configurar ACR credentials para Container App
         run: |
@@ -244,4 +334,3 @@ jobs:
         run: |
           ENDPOINT=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP --query properties.configuration.ingress.fqdn -o tsv)
           echo "Endpoint del Container App: https://$ENDPOINT"
-
